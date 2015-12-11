@@ -1,0 +1,14 @@
+[
+	{
+		"id" : 0,
+		"slug" : "Basic_Tower",
+		"title" : "Basic Tower",
+		"description" : "Just a basic tower.",
+		"stats" : {
+			"damage": 10,
+			"health": 70,
+			"armor": 5
+		},
+		"value" : 100		
+	}
+]
