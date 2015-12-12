@@ -10,6 +10,7 @@ public class EnemyAttack : MonoBehaviour {
 		if (collider.gameObject.tag == "Base") {
 			bHealth = collider.GetComponent<BuildingHealth>();
 			bHealth.currentHealth -= damage;
+			Destroy (gameObject);
 		}
 	}
 
