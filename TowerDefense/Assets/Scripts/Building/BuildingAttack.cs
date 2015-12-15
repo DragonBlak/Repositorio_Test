@@ -3,7 +3,7 @@ using System.Collections;
 
 public class BuildingAttack : MonoBehaviour {
 	
-	public int speed;
+	public int bulletSpeed;
 	public int damage;
 	public GameObject[] target;
 	public Transform firePos;
@@ -29,15 +29,17 @@ public class BuildingAttack : MonoBehaviour {
 			Fire ();
 		}
 		if (target.Length == 0)
-			targetAssign = 0;
+			targetAssign = -1;
+		else if (target [targetAssign] == null)
+			targetAssign = -1;
 	}
 	public void Fire(){
-		if (targetAssign == 0) 
+		if (targetAssign == -1) 
 			return;
 
 		toInstantiate = Instantiate (projectile, firePos.position, firePos.rotation) as GameObject;
 		Vector3 dir = target[targetAssign].transform.position - toInstantiate.transform.position;
-		toInstantiate.gameObject.GetComponent<Rigidbody>().velocity = dir.normalized * speed;
+		toInstantiate.gameObject.GetComponent<Rigidbody>().velocity = dir.normalized * bulletSpeed;
 		toInstantiate.GetComponent<BulletDamage> ().damage = damage;
 		Destroy (toInstantiate.gameObject, 2);
 		canFire = false;
@@ -59,5 +61,11 @@ public class BuildingAttack : MonoBehaviour {
 			transform.LookAt(target[targetAssign].transform);
 		}
 
+	}	
+	void OnTriggerExit(Collider collider) {
+		if (collider.gameObject.tag == "Enemy") {
+			targetAssign = -1;
+		}
 	}
+
 }

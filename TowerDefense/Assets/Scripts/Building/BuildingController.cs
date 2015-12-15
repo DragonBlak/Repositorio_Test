@@ -3,6 +3,7 @@ using System.Collections;
 
 public class BuildingController : MonoBehaviour {
 
+	//BUG: 1- To be fix: Not allow to place a tower inside another tower's spot
 	float distance;
 	float distToGround;
 	Color startcolor;
