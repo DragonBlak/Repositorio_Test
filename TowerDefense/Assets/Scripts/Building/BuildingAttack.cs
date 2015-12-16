@@ -30,10 +30,12 @@ public class BuildingAttack : MonoBehaviour {
 		}
 		if (target.Length == 0)
 			targetAssign = -1;
-		else if (target [targetAssign] == null)
-			targetAssign = -1;
 	}
 	public void Fire(){
+		if (target == null)
+			targetAssign = -1;
+		if (target [targetAssign].gameObject == null)
+			targetAssign = -1;
 		if (targetAssign == -1) 
 			return;
 

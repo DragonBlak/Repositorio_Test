@@ -1,13 +1,10 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Building\BuildingController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Building\BuildingHealth.cs">
     <Files>
-      <File FileName="Assets\Scripts\Building\BuildingAttack.cs" Line="6" Column="25" />
-      <File FileName="Assets\Scripts\GameManager.cs" Line="54" Column="4" />
-      <File FileName="Assets\Scripts\Enemy\EnemyController.cs" Line="23" Column="24" />
-      <File FileName="Assets\Scripts\Building\BuildingController.cs" Line="5" Column="2" />
-      <File FileName="Assets\Scripts\Enemy\EnemyAttack.cs" Line="13" Column="25" />
-      <File FileName="Assets\Scripts\Building\BuildingHealth.cs" Line="13" Column="3" />
+      <File FileName="Assets\Scripts\Building\BuildingAttack.cs" Line="31" Column="25" />
+      <File FileName="Assets\Scripts\Enemy\EnemyController.cs" Line="16" Column="1" />
+      <File FileName="Assets\Scripts\Building\BuildingHealth.cs" Line="16" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
