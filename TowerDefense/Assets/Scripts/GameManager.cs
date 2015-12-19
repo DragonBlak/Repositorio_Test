@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour {
 		yield return new WaitForSeconds (spawnDelay);
 
 		if (enemiesInScene == 0) {
-			int spawnEnemies = Mathf.Abs (Mathf.CeilToInt(towersInScene/2) +3 * 2 + currentWave);
+			int spawnEnemies = Mathf.Abs (Mathf.CeilToInt(towersInScene/2) +5 + currentWave);
 			for(int i = 1; i < spawnEnemies; i++){
 				enemyPrefab = Instantiate(enemy, spawnPoint.position, spawnPoint.rotation) as GameObject;
 

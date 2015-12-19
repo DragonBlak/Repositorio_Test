@@ -10,12 +10,13 @@ public class BuildingAttack : MonoBehaviour {
 	public GameObject projectile;
 	public float fireRate;
 	public float Range = 4;
-	float[] distBP;
+	public bool isTesla = false;
+	public LineRenderer teslaFR;
 	GameObject toInstantiate;
 	float nextFire;
 	bool canFire = false;
 	SphereCollider sCollider;
-	int targetAssign;
+	public int targetAssign;
 
 	void Start () {
 		sCollider = GetComponent<SphereCollider> ();
@@ -24,21 +25,60 @@ public class BuildingAttack : MonoBehaviour {
 	
 
 	void Update () {
-		if (canFire && Time.time > nextFire) {
+		Debug.DrawRay(transform.position, target[targetAssign].transform.position - transform.position , Color.green);
+		if (isTesla) {
+			Tesla();
+		}
+		if (canFire && isTesla == false && Time.time > nextFire) {
 			nextFire = Time.time + fireRate;
 			Fire ();
 		}
+
 		if (target.Length == 0)
 			targetAssign = -1;
 	}
+	void OnTriggerEnter(Collider collider) {
+		if (collider.gameObject.tag == "Enemy") {
+			for (int i = 0; i < target.Length; i++) {
+				if(targetAssign == -1){
+					targetAssign = i;
+					canFire = true;
+					target [targetAssign] = collider.gameObject;
+					target [targetAssign].transform.position = new Vector3 (target [targetAssign].transform.position.x, transform.position.y, target [targetAssign].transform.position.z);
+					transform.LookAt (target [targetAssign].transform);
+				}
+			}
+		}
+	}	
+	void OnTriggerStay(Collider collider) {
+		if (collider.gameObject.tag == "Enemy") {
+			if(targetAssign != -1){
+				canFire = true;
+				target[targetAssign].transform.position = new Vector3(target[targetAssign].transform.position.x, transform.position.y, target[targetAssign].transform.position.z);
+				transform.LookAt(target[targetAssign].transform);
+			}
+			else {
+				AssignTargetOnDestoy();
+				target [targetAssign] = collider.gameObject;
+				target [targetAssign].transform.position = new Vector3 (target [targetAssign].transform.position.x, transform.position.y, target [targetAssign].transform.position.z);
+				transform.LookAt (target [targetAssign].transform);
+			}
+		}
+	}
+	void OnTriggerExit(Collider collider){
+		if (collider.gameObject.tag == "Enemy") {
+			targetAssign = -1;
+		}
+	}
+	
+
 	public void Fire(){
 		if (target == null)
 			targetAssign = -1;
-		if (target [targetAssign].gameObject == null)
-			targetAssign = -1;
+
 		if (targetAssign == -1) 
 			return;
-
+		
 		toInstantiate = Instantiate (projectile, firePos.position, firePos.rotation) as GameObject;
 		Vector3 dir = target[targetAssign].transform.position - toInstantiate.transform.position;
 		toInstantiate.gameObject.GetComponent<Rigidbody>().velocity = dir.normalized * bulletSpeed;
@@ -46,28 +86,32 @@ public class BuildingAttack : MonoBehaviour {
 		Destroy (toInstantiate.gameObject, 2);
 		canFire = false;
 	}
-	void OnTriggerStay(Collider collider) {
-		if (collider.gameObject.tag == "Enemy") {
-			for (int i = 0; i < target.Length; i++) {
-				distBP = new float[target.Length];
-				float minDist = Mathf.Infinity;
-				distBP[i] = Vector3.Distance(transform.position, target[i].transform.position);
-				if(distBP[i] < minDist)
-				{
-					targetAssign = i;
-				}
-			}
-			canFire = true;
-			target[targetAssign] = collider.gameObject;
-			target[targetAssign].transform.position = new Vector3(target[targetAssign].transform.position.x, transform.position.y, target[targetAssign].transform.position.z);
-			transform.LookAt(target[targetAssign].transform);
-		}
 
-	}	
-	void OnTriggerExit(Collider collider) {
-		if (collider.gameObject.tag == "Enemy") {
-			targetAssign = -1;
+	public void Tesla(){
+		if (isTesla) {
+			toInstantiate =	Instantiate (teslaFR.gameObject, transform.position, transform.rotation) as GameObject;
+			
+			teslaFR.SetPosition(0, transform.position);
+			Vector3 A = transform.position;
+			Vector3 B = target[targetAssign].transform.position;
+			float X = Mathf.Lerp(0 , Vector3.Distance(transform.position,target[targetAssign].transform.position) , 1);
+			Vector3 point = X * Vector3.Normalize(B - A) + A;
+			
+			teslaFR.SetPosition(1, point);
+			
+			Destroy(toInstantiate, 0.08f);
 		}
 	}
-
+	public void AssignTargetOnDestoy(){
+		float distance = Mathf.Infinity;
+		Vector3 position = transform.position;
+		for(int i = 0; i < target.Length; i++){
+			Vector3 diff = target[i].transform.position - position;
+			float curDistance = diff.sqrMagnitude;
+				if (curDistance < distance) {
+					targetAssign = i;
+					distance = curDistance;
+				}
+		}
+	}
 }
