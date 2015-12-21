@@ -12,10 +12,10 @@ public class BuildingAttack : MonoBehaviour {
 	public float Range = 4;
 	public bool isTesla = false;
 	public LineRenderer teslaFR;
-	GameObject toInstantiate;
-	float nextFire;
-	bool canFire = false;
-	SphereCollider sCollider;
+	public GameObject toInstantiate;
+	public float nextFire;
+	public bool canFire = false;
+	public SphereCollider sCollider;
 	public int targetAssign;
 
 	void Start () {
@@ -45,7 +45,7 @@ public class BuildingAttack : MonoBehaviour {
 					canFire = true;
 					target [targetAssign] = collider.gameObject;
 					target [targetAssign].transform.position = new Vector3 (target [targetAssign].transform.position.x, transform.position.y, target [targetAssign].transform.position.z);
-					transform.LookAt (target [targetAssign].transform);
+					transform.LookAt (target[targetAssign].transform);
 				}
 			}
 		}
@@ -90,7 +90,8 @@ public class BuildingAttack : MonoBehaviour {
 	public void Tesla(){
 		if (isTesla) {
 			toInstantiate =	Instantiate (teslaFR.gameObject, transform.position, transform.rotation) as GameObject;
-			
+			TeslaRay rayScript = toInstantiate.GetComponent<TeslaRay>();
+			rayScript.damage = damage; 
 			teslaFR.SetPosition(0, transform.position);
 			Vector3 A = transform.position;
 			Vector3 B = target[targetAssign].transform.position;
@@ -98,7 +99,8 @@ public class BuildingAttack : MonoBehaviour {
 			Vector3 point = X * Vector3.Normalize(B - A) + A;
 			
 			teslaFR.SetPosition(1, point);
-			
+
+			rayScript.RayDamage(target[targetAssign].transform);
 			Destroy(toInstantiate, 0.08f);
 		}
 	}

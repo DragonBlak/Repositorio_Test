@@ -14,6 +14,9 @@ public class GameManager : MonoBehaviour {
 
 	public int enemiesInScene;
 	public int towersInScene;
+
+	public int money;
+	
 	GameObject[] GM_Tower;
 	BuildingAttack[] bAttScript;
 	int currentWave;

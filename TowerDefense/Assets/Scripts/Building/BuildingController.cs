@@ -3,26 +3,32 @@ using System.Collections;
 
 public class BuildingController : MonoBehaviour {
 	
-	float distance;
+
 	float distToGround;
-	Color startcolor;
+	float yHeight;
+	float distance;
+	Color[] startcolor;
 	[HideInInspector]public float lastPosX;
 	[HideInInspector]public float lastPosY;
 	[HideInInspector]public float lastPosZ;
-	Renderer rend;
+	Renderer[] rend;
 	GameObject gameManager;
 	GameManager gameMscript;
 	bool isGrounded(){
-		return Physics.Raycast(transform.position, -Vector3.up, distToGround + 0.1f);
+		return Physics.Raycast(transform.position, Vector3.down, distToGround + 0.1f);
 	}
 	bool TowerDetected = false;
 
 	void Start () {
+		yHeight = transform.position.y + 1;
 		gameManager = GameObject.FindGameObjectWithTag ("GameController");
 		gameMscript = gameManager.GetComponent<GameManager> ();
-		rend = GetComponent<Renderer> ();
-		startcolor = rend.material.GetColor("_Color");
-		distToGround = gameObject.GetComponent<Collider>().bounds.extents.y;
+		rend = GetComponentsInChildren<Renderer> ();
+		startcolor = new Color[rend.Length];
+		for (int i = 0; i < rend.Length; i++) {
+			startcolor[i] = rend[i].material.GetColor ("_Color");
+		}
+		distToGround = gameObject.GetComponent<BoxCollider>().bounds.extents.y;
 
 	}
 
@@ -43,19 +49,25 @@ public class BuildingController : MonoBehaviour {
 		distance = Camera.main.transform.position.y;
 		Vector3 mousePosition = new Vector3 (Input.mousePosition.x, Input.mousePosition.y, distance);
 		Vector3 objPosition = Camera.main.ScreenToWorldPoint (mousePosition);
-		transform.position = new Vector3 ((int)objPosition.x, 1f, (int)objPosition.z);
+		transform.position = new Vector3 ((int)objPosition.x, yHeight, (int)objPosition.z);
 		if (isGrounded() && TowerDetected == false) {
-			rend.material.color = Color.green;
+			for (int i = 0; i < rend.Length; i++) {
+				rend[i].material.color = Color.green;
+			}
 		} 
 		else
 		{
-			rend.material.color = Color.red;
+			for (int i = 0; i < rend.Length; i++) {
+				rend[i].material.color = Color.red;
+			}
 		}
 	}
 	void OnBeingPlaced(){			
 		if(isGrounded() && TowerDetected == false)
 		{
-			rend.material.color = startcolor;
+			for (int i = 0; i < rend.Length; i++) {
+				rend[i].material.color = startcolor[i];
+			}
 			lastPosX = transform.position.x;
 			lastPosY = transform.position.y;
 			lastPosZ = transform.position.z;	
@@ -63,7 +75,9 @@ public class BuildingController : MonoBehaviour {
 		else
 		{
 			transform.position = new Vector3(lastPosX,lastPosY,lastPosZ);
-			rend.material.color = startcolor;				
+			for (int i = 0; i < rend.Length; i++) {
+				rend[i].material.color = startcolor[i];
+			}
 		}
 	}
 	void RestartRotation(){

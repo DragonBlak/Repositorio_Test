@@ -3,7 +3,7 @@ using System.Collections;
 
 public class TeslaRay : MonoBehaviour {
 
-	// Use this for initialization
+	[HideInInspector]public int damage;
 	void Start () {
 	
 	}
@@ -11,5 +11,16 @@ public class TeslaRay : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 	
+	}
+	public void RayDamage(Transform Target){
+		RaycastHit hit;
+		if (Physics.Raycast (transform.position, Target.position - transform.position, out hit)) {
+			switch (hit.transform.gameObject.tag) {
+				case "Enemy":
+					EnemyController enemyController = Target.GetComponent<EnemyController>();
+					enemyController.currentHealth -= damage;
+				break;
+			}
+		}
 	}
 }
