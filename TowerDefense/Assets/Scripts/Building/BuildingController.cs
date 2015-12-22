@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class BuildingController : MonoBehaviour {
-	
-
 	float distToGround;
 	float yHeight;
 	float distance;

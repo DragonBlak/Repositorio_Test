@@ -13,10 +13,10 @@ public class BuildingAttack : MonoBehaviour {
 	public bool isTesla = false;
 	public LineRenderer teslaFR;
 	public GameObject toInstantiate;
-	public float nextFire;
-	public bool canFire = false;
-	public SphereCollider sCollider;
-	public int targetAssign;
+	float nextFire;
+	bool canFire = false;
+	SphereCollider sCollider;
+	int targetAssign;
 
 	void Start () {
 		sCollider = GetComponent<SphereCollider> ();
@@ -25,7 +25,9 @@ public class BuildingAttack : MonoBehaviour {
 	
 
 	void Update () {
-		Debug.DrawRay(transform.position, target[targetAssign].transform.position - transform.position , Color.green);
+		if (target.Length == 0)
+			targetAssign = -1;
+		//Debug.DrawRay(transform.position, target[targetAssign].transform.position - transform.position , Color.green);
 		if (isTesla) {
 			Tesla();
 		}
@@ -33,9 +35,6 @@ public class BuildingAttack : MonoBehaviour {
 			nextFire = Time.time + fireRate;
 			Fire ();
 		}
-
-		if (target.Length == 0)
-			targetAssign = -1;
 	}
 	void OnTriggerEnter(Collider collider) {
 		if (collider.gameObject.tag == "Enemy") {
@@ -73,11 +72,14 @@ public class BuildingAttack : MonoBehaviour {
 	
 
 	public void Fire(){
-		if (target == null)
-			targetAssign = -1;
-
 		if (targetAssign == -1) 
 			return;
+
+		if (target[targetAssign] == null)
+		{
+			targetAssign = -1;
+			return;
+		}
 		
 		toInstantiate = Instantiate (projectile, firePos.position, firePos.rotation) as GameObject;
 		Vector3 dir = target[targetAssign].transform.position - toInstantiate.transform.position;
@@ -89,6 +91,13 @@ public class BuildingAttack : MonoBehaviour {
 
 	public void Tesla(){
 		if (isTesla) {
+			if (targetAssign == -1) 
+				return;
+			if (target[targetAssign] == null)
+			{
+				targetAssign = -1;
+				return;
+			}
 			toInstantiate =	Instantiate (teslaFR.gameObject, transform.position, transform.rotation) as GameObject;
 			TeslaRay rayScript = toInstantiate.GetComponent<TeslaRay>();
 			rayScript.damage = damage; 
